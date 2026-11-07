@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
@@ -26,10 +27,10 @@ public class JwtUtils {
 
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+jwtExpiration))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis()+jwtExpiration))
+                .signWith(getSignInKey())
                 .compact();
     }
 
@@ -57,9 +58,10 @@ public class JwtUtils {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(getSignInKey())
+                .verifyWith((SecretKey) getSignInKey())
                 .build()
-                .parseClaimsJws(token).getBody();
+                .parseSignedClaims(token)
+                .getPayload();
 
     }
 

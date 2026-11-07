@@ -28,7 +28,7 @@ public class Categoria {
     @Column(length = 500)
     private String descripcion;
 
-    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Producto> productos;
 }
