@@ -5,7 +5,6 @@ import com.efrainperez.labbackend.dto.LoginRequestDTO;
 import com.efrainperez.labbackend.models.Usuario;
 import com.efrainperez.labbackend.services.AuthService;
 import jakarta.validation.Valid;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +23,15 @@ import java.util.Map;
 public class AuthController {
     //@GetMapping("/X")
      private final AuthService authService;
+
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, String>> register(@Valid @RequestBody Usuario usuario) {
+        authService.registrar(usuario);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("mensaje", "Usuario registrado correctamente"); // Agrega el mensaje al mapa
+        return ResponseEntity.ok(map);
+    }
 
 
      @PostMapping("/login")
